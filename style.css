@@ -1,0 +1,16 @@
+body {
+  background-color: beige;
+}
+
+p {
+  font-size: 24px;
+}
+
+input,
+button {
+  padding: 5px;
+}
+
+input {
+  width: 250px;
+}
