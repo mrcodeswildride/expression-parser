@@ -8,7 +8,7 @@ expression.addEventListener(`keydown`, keyPressed)
 expression.focus()
 
 function parseExpression() {
-  let expressionValue = expression.value.replaceAll(` `, ``)
+  let expressionValue = expression.value.replace(/ /g, ``)
   let answer = evalExpression(expressionValue)
 
   if (!isNaN(answer)) {
