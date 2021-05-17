@@ -13,21 +13,13 @@ function parseExpression() {
 
   if (!isNaN(answer)) {
     answerParagraph.innerHTML = answer
-  }
-  else {
-    answerParagraph.innerHTML = `Invalid input.`
-  }
-}
-
-function keyPressed(event) {
-  if (event.keyCode == 13) {
-    parseExpression()
+  } else {
+    answerParagraph.innerHTML = `Invalid expression.`
   }
 }
 
 function evalExpression(expression) {
   let obj = extractTermsOperators(expression)
-
   evalTerms(obj.terms)
 
   return applyOperators(obj.terms, obj.operators)
@@ -43,18 +35,15 @@ function extractTermsOperators(expression) {
   for (let character of expression) {
     if (character == `(`) {
       parenCount++
-    }
-    else if (character == `)`) {
+    } else if (character == `)`) {
       parenCount--
     }
 
     if (parenCount == 0 && `+-*/`.includes(character)) {
       terms.push(term)
       operators.push(character)
-
       term = ``
-    }
-    else {
+    } else {
       term += character
     }
   }
@@ -63,7 +52,7 @@ function extractTermsOperators(expression) {
 
   return {
     terms: terms,
-    operators: operators
+    operators: operators,
   }
 }
 
@@ -71,19 +60,16 @@ function evalTerms(terms) {
   for (let i = 0; i < terms.length; i++) {
     if (terms[i] == ``) {
       terms[i] = NaN
-    }
-    else if (!isNaN(terms[i])) {
+    } else if (!isNaN(terms[i])) {
       terms[i] = Number(terms[i])
-    }
-    else {
+    } else {
       let firstChar = terms[i][0]
-      let lastChar = terms[i][terms[i].length-1]
+      let lastChar = terms[i][terms[i].length - 1]
 
       if (firstChar != `(` || lastChar != `)`) {
         terms[i] = NaN
-      }
-      else {
-        let subexpression = terms[i].substring(1, terms[i].length-1)
+      } else {
+        let subexpression = terms[i].substring(1, terms[i].length - 1)
         terms[i] = evalExpression(subexpression)
       }
     }
@@ -95,18 +81,21 @@ function applyOperators(terms, operators) {
 
   for (let i = 0; i < operators.length; i++) {
     if (operators[i] == `+`) {
-      answer += terms[i+1]
-    }
-    else if (operators[i] == `-`) {
-      answer -= terms[i+1]
-    }
-    else if (operators[i] == `*`) {
-      answer *= terms[i+1]
-    }
-    else if (operators[i] == `/`) {
-      answer /= terms[i+1]
+      answer += terms[i + 1]
+    } else if (operators[i] == `-`) {
+      answer -= terms[i + 1]
+    } else if (operators[i] == `*`) {
+      answer *= terms[i + 1]
+    } else if (operators[i] == `/`) {
+      answer /= terms[i + 1]
     }
   }
 
   return answer
+}
+
+function keyPressed(event) {
+  if (event.keyCode == 13) {
+    parseExpression()
+  }
 }
