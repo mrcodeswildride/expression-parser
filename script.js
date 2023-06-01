@@ -1,18 +1,37 @@
 let expression = document.getElementById(`expression`)
 let parseButton = document.getElementById(`parseButton`)
+let visualizeButton = document.getElementById(`visualizeButton`)
 let answerParagraph = document.getElementById(`answerParagraph`)
 
-parseButton.addEventListener(`click`, parseExpression)
+let visual
+let expressionValue
+let termsToReplace
+
+parseButton.addEventListener(`click`, parse)
+visualizeButton.addEventListener(`click`, visualize)
 
 expression.addEventListener(`keydown`, keyPressed)
 expression.focus()
 
+function parse() {
+  visual = false
+  parseExpression()
+}
+
+function visualize() {
+  visual = true
+  parseExpression()
+}
+
 function parseExpression() {
-  let expressionValue = expression.value.replace(/ /g, ``)
+  expressionValue = expression.value.replace(/ /g, ``)
+  termsToReplace = []
+  answerParagraph.innerHTML = ``
+
   let answer = evalExpression(expressionValue)
 
   if (!isNaN(answer)) {
-    answerParagraph.innerHTML = answer
+    answerParagraph.innerHTML += answer
   } else {
     answerParagraph.innerHTML = `Invalid expression.`
   }
@@ -70,7 +89,20 @@ function evalTerms(terms) {
         terms[i] = NaN
       } else {
         let subexpression = terms[i].substring(1, terms[i].length - 1)
+        termsToReplace.push(terms[i])
+
         terms[i] = evalExpression(subexpression)
+
+        if (visual) {
+          let termToReplace = termsToReplace.pop()
+          expressionValue = expressionValue.replace(termToReplace, terms[i])
+
+          for (let j = 0; j < termsToReplace.length; j++) {
+            termsToReplace[j] = termsToReplace[j].replace(termToReplace, terms[i])
+          }
+
+          answerParagraph.innerHTML += `${expressionValue}<br><br>`
+        }
       }
     }
   }
